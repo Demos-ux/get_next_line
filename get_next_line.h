@@ -6,7 +6,7 @@
 /*   By: dsisli <dsisli@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 15:27:12 by dsisli            #+#    #+#             */
-/*   Updated: 2025/11/15 10:16:47 by dsisli           ###   ########.fr       */
+/*   Updated: 2026/01/20 16:42:46 by dsisli           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # include <unistd.h>
 
 char	*get_next_line(int fd);
-void	free_gnl_track(void);
 
 size_t	gnl_strlen(const char *s);
 char	*gnl_strchr(const char *s, int c);

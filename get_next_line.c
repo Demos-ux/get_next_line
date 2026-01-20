@@ -6,38 +6,37 @@
 /*   By: dsisli <dsisli@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 06:38:16 by dsisli            #+#    #+#             */
-/*   Updated: 2025/11/15 10:16:44 by dsisli           ###   ########.fr       */
+/*   Updated: 2026/01/20 16:57:57 by dsisli           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*g_track = NULL;
-
 char	*ft_gnl_make_line(int fd, char *track)
 {
-	char	buffer[BUFFER_SIZE + 1];
-	ssize_t	bytesread;
+	char	*buf;
+	ssize_t	len;
 
-	while (!gnl_strchr(track, '\n'))
+	buf = malloc(BUFFER_SIZE + 1);
+	if (!buf)
+		return (NULL);
+	len = 1;
+	while (!gnl_strchr(track, '\n') && len > 0)
 	{
-		bytesread = read(fd, buffer, BUFFER_SIZE);
-		if (bytesread < 0)
+		len = read(fd, buf, BUFFER_SIZE);
+		if (len == -1)
 		{
-			if (track)
-			{
-				free(track);
-				track = NULL;
-			}
+			free(buf);
+			free(track);
 			return (NULL);
 		}
-		if (bytesread == 0)
-			break ;
-		buffer[bytesread] = '\0';
-		track = gnl_strjoin(track, buffer);
-		if (!track)
-			return (NULL);
+		if (len > 0)
+		{
+			buf[len] = '\0';
+			track = gnl_strjoin(track, buf);
+		}
 	}
+	free(buf);
 	return (track);
 }
 
@@ -62,31 +61,20 @@ char	*extract_line(char **track)
 	return (line);
 }
 
-void	free_gnl_track(void)
-{
-	if (g_track)
-	{
-		free(g_track);
-		g_track = NULL;
-	}
-}
-
 char	*get_next_line(int fd)
 {
-	char	*line;
+	static char	*track;
+	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	g_track = ft_gnl_make_line(fd, g_track);
-	if (!g_track || *g_track == '\0')
+	track = ft_gnl_make_line(fd, track);
+	if (!track || *track == '\0')
 	{
-		if (g_track)
-		{
-			free(g_track);
-			g_track = NULL;
-		}
+		free(track);
+		track = NULL;
 		return (NULL);
 	}
-	line = extract_line(&g_track);
+	line = extract_line(&track);
 	return (line);
 }
