@@ -6,7 +6,7 @@
 /*   By: dsisli <dsisli@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 06:38:16 by dsisli            #+#    #+#             */
-/*   Updated: 2026/01/20 16:57:57 by dsisli           ###   ########.fr       */
+/*   Updated: 2026/01/22 19:18:51 by dsisli           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,15 @@ char	*extract_line(char **track)
 	else
 		len = gnl_strlen(*track);
 	line = gnl_substr(*track, 0, len);
+	if (!line)
+		return (NULL);
 	rest_len = gnl_strlen(*track) - len;
 	rest = gnl_substr(*track, len, rest_len);
+	if (!rest)
+	{
+		free(line);
+		return (NULL);
+	}
 	free(*track);
 	*track = rest;
 	return (line);
